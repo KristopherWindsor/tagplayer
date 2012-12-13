@@ -1,0 +1,20 @@
+body {margin: 0 auto; max-width: 960px; min-width: 640px; padding: 0 16px;}
+
+#top {width: 100%;}
+#top > * {display: inline-block;  margin: 32px 0; padding: 0;}
+#top * {font-family: "Times New Roman", serif; font-size: 32px; height: 34px; line-height: 34px;}
+#top h1 {margin-bottom: 0; margin-right: 16px;}
+#top input {width: 100%;}
+/* clearfix only for #top */
+#top:after {clear: both; content: "."; display: block; height: 0; visibility: hidden;}
+
+table {border-collapse: collapse; clear: both; table-layout: fixed; width: 100%;}
+th {border-bottom: 1px solid #ccc; text-align: left; text-transform: uppercase;}
+th a {color: black; display: inline-block; font-weight: normal; text-decoration: none;}
+th a:hover {font-style: italic;}
+td, th {font-family: monospace; font-size: 11px; line-height: 12px; white-space: nowrap; overflow: hidden; padding-right: 2%; text-overflow: ellipsis; vertical-align: top; width: 23%;}
+
+/* what won't the internet think of next? */
+.arrow {float: left; height: 0; margin: 3px 8px 0 0; width: 0;}
+.arrow.asc {border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid black;}
+.arrow.desc {border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid black;}

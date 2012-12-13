@@ -73,6 +73,11 @@ class Query
 		return $res;
 		}
 	
+	function insertId()
+		{
+		return mysql_insert_id();
+		}
+
 	private static function escape($param)
 		{
 		return mysql_real_escape_string($param);
