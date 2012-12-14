@@ -22,11 +22,16 @@ if ($query){
 		$queries[] = (object) array('title'   => $p2, 'album'  => $p1);
 		$queries[] = (object) array('artist'  => $p1, 'album'  => $p2);
 		$queries[] = (object) array('artist'  => $p2, 'album'  => $p1);
+		
+		$queries[] = (object) array('title'   => $p1, 'tags' => $p2);
+		$queries[] = (object) array('title'   => $p2, 'tags' => $p1);
+		$queries[] = (object) array('album'   => $p1, 'tags'  => $p2);
+		$queries[] = (object) array('album'   => $p2, 'tags'  => $p1);
+		$queries[] = (object) array('artist'  => $p1, 'tags'  => $p2);
+		$queries[] = (object) array('artist'  => $p2, 'tags'  => $p1);
 	}
-	
-	$queries[] = (object) array('tags' => $query);
 }
 
 header('Content-type: application/json');
 header("echo: {$echo}");
-echo json_encode(Song::get($queries, $sort_col, $sort_dir, 0, 50));
+echo json_encode(Song::get($queries, $sort_col, $sort_dir, 0, 200));

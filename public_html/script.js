@@ -1,16 +1,31 @@
 var manager = new function(){
 	var _this = this;
 	
-	this.dir = 'desc';
-	this.field = 'tag';
+	this.dir = 'asc';
+	this.field = 'title';
 	this.reqCounter = 0;
 	this.currentSong = 0;
 	this.playRequest = null;
+	this.oldHash = null;
+	this.urlMap = {};
 	
 	this.init = function(){
+		// pre-init hash before initial data request
+		_this.oldHash = window.location.hash;
+		$('#query').val(window.location.hash.substring(1));
+		
 		this.setSort();
 		$('#query').on('keyup paste change', this.requestData);
 		$('th a').click(this.setSort);
+		
+		setInterval(_this.checkHash, 500);
+	};
+	
+	this.checkHash = function(){
+		if (window.location.hash != _this.oldHash){
+			_this.oldHash = window.location.hash;
+			$('#query').val(window.location.hash.substring(1)).trigger('change');
+		}
 	};
 	
 	this.setSort = function(event){
@@ -39,9 +54,15 @@ var manager = new function(){
 		
 		// templates would be nice
 		var tbody = $('tbody').html('');
-		for (var i in data){
+		for (var i in data){ /* testing */ data[i].url = data[i].url.replace('67.188.70.238', '192.168.0.150');
+			_this.urlMap[data[i].id] = data[i].url;
+			
+			var link = $('<a>').attr('href', 'javascript:void(0)').data('id', data[i].id).click(function () {
+				_this.playUrl($(this).data('id'));
+			}).text(data[i].title);
+			
 			var row = $('<tr>');
-			$('<td>').text(data[i].title).appendTo(row);
+			$('<td>').append(link).appendTo(row);
 			$('<td>').text(data[i].artist).appendTo(row);
 			$('<td>').text(data[i].album).appendTo(row);
 			$('<td>').text(data[i].tags).appendTo(row);
@@ -51,12 +72,17 @@ var manager = new function(){
 		if (data){
 			if (_this.playRequest)
 				clearTimeout(_this.playRequest);
-			var go = function () {_this.playUrl(data[0].id, data[0].url); _this.playRequest = null;}
+			var go = function () {
+				if (window.location.hash || $('#query').val())
+					window.location.hash = _this.oldHash = '#' + $('#query').val();
+				_this.playUrl(data[0].id);
+				_this.playRequest = null;
+			}
 			_this.playRequest = setTimeout(go, 1000);
 		}
 	};
 	
-	this.playUrl = function(songId, url){
+	this.playUrl = function(songId){
 		if (!songId || songId == _this.currentSong)
 			return;
 		
@@ -67,7 +93,7 @@ var manager = new function(){
 		if ($('#track' + songId).length)
 			$('#track' + songId).show().trigger('play');
 		else {
-			var player = $('<audio controls autoplay>').attr('id', "track" + songId).attr('src', url);
+			var player = $('<audio controls autoplay>').attr('id', "track" + songId).attr('src', _this.urlMap[songId]);
 			$('#audio').append(player);
 		}
 	};
